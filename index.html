@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="author" content="iwnaras">
-<meta name="robots" content="noindex nofollow">
+<meta name="robots" content="noarchive nofollow">
 <title>iwnaras startpage</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ"></script>
 <script>
@@ -27,7 +27,7 @@ xairetismos += `, ${onoma}!`;
 $(function() {
   document.getElementById("greet").innerHTML = xairetismos;
   let wttr = null;
-  $.getJSON('https://wttr.in/skg?format=j1&lang=el', function(wttr){
+  $.getJSON('https://wttr.in/thessaloniki?format=j1&lang=el', function(wttr){
     console.log(wttr);
     let temprature = wttr.current_condition[0].temp_C;
     let feelslike = wttr.current_condition[0].FeelsLikeC;
@@ -73,9 +73,6 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url(/startpage/bg.jpg);
-}
-body::selection {
-  background-color: pink; /*den douleuei?*/
 }
 hr {
   margin: 4mm 3cm;
@@ -152,6 +149,24 @@ hr {
 #wreport {
   text-transform: lowercase;
 }
+@media screen and (max-width: 14cm) {
+  body {
+    background-size: unset;
+  }
+  #greet {
+    font-size: 200%;
+  }
+  hr {
+    visibility: collapse;
+  }
+  #links ul {
+    display: grid;
+  }
+  #links ul li {
+    margin: 3px 0;
+    text-align: center;
+  }
+}
 </style>
 </head>
 <body>
@@ -164,6 +179,15 @@ hr {
   <ul>
     <li title="υπηρεσίες">🌍</li>
     <li>
+      <a href="http://localhost">cloud</a>
+    </li>
+    <li>
+      <a href="http://localhost">jackett</a>
+    </li>
+    <li>
+      t: <a href="http://localhost">I</a>|<a href="http://localhost:9091/transmission/web/">l</a>|<a href="http://localhost">1</a>
+    </li>
+    <li>
       <a href="https://github.com">git</a>
     </li>
     <li>
@@ -175,10 +199,6 @@ hr {
     <li>
       <a href="https://www.last.fm/user/iwnaras">last</a>
     </li>
-    <li>
-      <a href="https://ionas.dev">ionas.dev</a>
-    </li>
-    <li>esvhsa oti hostarw</li>
   </ul>
   <ul>
     <li title="λάμπες φθορισμού">💡</li>
