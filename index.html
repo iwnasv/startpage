@@ -8,7 +8,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ"></script>
 <script>
 let now = new Date();
-const wra = now.getHours() + 3; //logw zwnhs, ton firefox ton exw sto utc
+let wra = now.getHours() + 3;
+if (wra > 23) {
+  wra -= 24;
+} //logw zwnhs, ton firefox ton exw sto UTC
+//sigoura exei kai kalytero tropo
 let xairetismos = null;
 const onoma = "ιωνάρα";
 if(wra > 4 & wra < 13) {
@@ -19,23 +23,24 @@ if(wra > 4 & wra < 13) {
   xairetismos = "καληνύχτα";
 }
 xairetismos += `, ${onoma}!`;
-wHour = Math.ceil(wra/3);
 //gia thn triwrh provlepsh, epomeno triwro gt ta tables ksekinane ap to 0 enw oi wres meta ta mesanyxta 1.
 $(function() {
   document.getElementById("greet").innerHTML = xairetismos;
   let wttr = null;
-  $.getJSON('https://wttr.in/analipsi?format=j1&lang=el', function(wttr){
+  $.getJSON('https://wttr.in/skg?format=j1&lang=el', function(wttr){
     console.log(wttr);
     let temprature = wttr.current_condition[0].temp_C;
     let feelslike = wttr.current_condition[0].FeelsLikeC;
     let humidity = wttr.current_condition[0].humidity;
-    let aurio = null;
+    let aurio = 0;
+    wHour = Math.ceil(wra/3); //h wra gia th triwrh provlepsh
     if(wHour == 8) {
       wHour = 0;
       aurio = 1;
-    } else {
-      aurio = 0;
     } //poutania gia to vrady sygkekrimena gia th vroxh, oi wres pane 1-8 kai ta tables 0-7 opote pame sto auriano 0
+    console.log(aurio);
+    console.log(wra);
+    console.log(wHour);
     let vroxh = wttr.weather[aurio].hourly[wHour].chanceofrain;
     let aurioTempMin = wttr.weather[1].mintempC;
     let aurioTempMax = wttr.weather[1].maxtempC;
@@ -70,7 +75,7 @@ body {
   background-image: url(/startpage/bg.jpg);
 }
 body::selection {
-  background-color: black; /*den douleuei?*/
+  background-color: pink; /*den douleuei?*/
 }
 hr {
   margin: 4mm 3cm;
@@ -165,9 +170,12 @@ hr {
       <a href="https://drive.google.com">gdrive</a>
     </li>
     <li>
+      <a href="http://localhost:11111/">sync</a>
+    </li>
+    <li>
       <a href="https://www.last.fm/user/iwnaras">last</a>
     </li>
-    <li>esvhsa ta links se oti hostarw egw</li>
+    <li>esvhsa oti hostarw</li>
   </ul>
   <ul>
     <li title="λάμπες φθορισμού">💡</li>
