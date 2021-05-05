@@ -8,19 +8,21 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ"></script>
 <script>
 let now = new Date();
-let wra = now.getHours() + 3;
+let wra = now.getHours();
+/* hack gia to firefox sto laptop pou einai sto utc anti gia eest
+wra += 3;
 if (wra > 23) {
   wra -= 24;
-} //logw zwnhs, ton firefox ton exw sto UTC
-//sigoura exei kai kalytero tropo
+}
+*/
 let xairetismos = null;
 const onoma = "ιωνάρα";
-if(wra > 4 & wra < 13) {
-  xairetismos = "καλημέρα";
-} else if(wra > 12 & wra < 23) {
+if(wra < 4) {
+  xairetismos = "καληνύχτα";
+} else if(wra > 12) {
   xairetismos = "καλησπέρα";
 } else {
-  xairetismos = "καληνύχτα";
+  xairetismos = "καλημέρα";
 }
 xairetismos += `, ${onoma}!`;
 //gia thn triwrh provlepsh, epomeno triwro gt ta tables ksekinane ap to 0 enw oi wres meta ta mesanyxta 1.
