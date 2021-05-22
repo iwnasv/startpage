@@ -40,9 +40,9 @@ $(function() {
       wHour = 0;
       aurio = 1;
     } //poutania gia to vrady sygkekrimena gia th vroxh, oi wres pane 1-8 kai ta tables 0-7 opote pame sto auriano 0
-    console.log(aurio);
-    console.log(wra);
-    console.log(wHour);
+    //console.log(aurio);
+    //console.log(wra);
+    //console.log(wHour);
     let vroxh = wttr.weather[aurio].hourly[wHour].chanceofrain;
     let aurioTempMin = wttr.weather[1].mintempC;
     let aurioTempMax = wttr.weather[1].maxtempC;
@@ -65,6 +65,36 @@ $(function() {
     document.getElementById("aurio").innerHTML = `αύριο ${aurioTempMin}-${aurioTempAvg}-${aurioTempMax}°C${aurioRain}`;
   });
 });
+const shortcuts = [
+  {
+    "key": "c",
+    "url": "cloud"
+  },
+  {
+    "key": "t",
+    "url": "transmissionLan"
+  },
+  {
+    "key": "j",
+    "url": "jackett"
+  }
+]
+const getUrl = (aElem) => document.getElementById(aElem).href;
+const keybindLocation = (letter) => {
+  for(let i = 0; i < shortcuts.length; i++) {
+    if(letter === shortcuts[i].key) {
+      document.location = getUrl(shortcuts[i].url);
+    }
+  }
+}
+const aClass = (linkArray) => {
+  for(let i = 0; i < linkArray.length; i++) {
+    if(linkArray[i].id !== '') {
+      linkArray[i].className = 'keybound';
+    }
+  }
+}
+//const linkArray = document.querySelectorAll('#links a');
 </script>
 <style>
 body {
@@ -177,14 +207,14 @@ hr {
 <form action="https://duckduckgo.com/" method="get" id="search">
   <input type="search" name="q" autofocus="true" placeholder="σερτς... 🔎">
 </form>
-<div id="links">
+<div id="links" onKeyDown="keybindLocation(event.key)">
   <ul>
     <li title="υπηρεσίες">🌍</li>
     <li>
-      <a href="http://localhost">cloud</a>
+      <a id="cloud" href="http://localhost">cloud</a>
     </li>
     <li>
-      <a href="http://localhost">jackett</a>
+      <a id="jackett" href="http://localhost">jackett</a>
     </li>
     <li>
       t: <a href="http://localhost">I</a>|<a href="http://localhost:9091/transmission/web/">l</a>|<a href="http://localhost">1</a>
@@ -199,7 +229,7 @@ hr {
       <a href="http://localhost:11111/">sync</a>
     </li>
     <li>
-      <a href="https://www.last.fm/user/iwnaras">last</a>
+      <a href="https://www.last.fm">last</a>
     </li>
   </ul>
   <ul>
