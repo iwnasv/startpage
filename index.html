@@ -3,34 +3,32 @@
 <head>
 <meta charset="utf-8" />
 <meta name="author" content="iwnaras">
-<meta name="robots" content="noarchive nofollow">
+<meta name="robots" content="noindex nofollow">
 <title>iwnaras startpage</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ"></script>
 <script>
 let now = new Date();
-let wra = now.getHours();
-/* hack gia to firefox sto laptop pou einai sto utc anti gia eest
-wra += 3;
+let wra = now.getHours();/* + 3;
 if (wra > 23) {
   wra -= 24;
-}
-*/
-let xairetismos = null;
+} logw zwnhs, ton firefox ton exw sto UTC*/
+let xairetismos;
+let color;
 const onoma = "ιωνάρα";
-if(wra < 4) {
-  xairetismos = "καληνύχτα";
-} else if(wra > 12) {
-  xairetismos = "καλησπέρα";
-} else {
+if(wra > 4 & wra < 13) {
   xairetismos = "καλημέρα";
+  color = "#EE8225";
+} else if(wra > 12 & wra < 23) {
+  xairetismos = "καλησπέρα";
+  color = "steelblue";
+} else {
+  xairetismos = "καληνύχτα";
+  color = "#5A185A";
 }
 xairetismos += `, ${onoma}!`;
-//gia thn triwrh provlepsh, epomeno triwro gt ta tables ksekinane ap to 0 enw oi wres meta ta mesanyxta 1.
 $(function() {
-  document.getElementById("greet").innerHTML = xairetismos;
   let wttr = null;
-  $.getJSON('https://wttr.in/thessaloniki?format=j1&lang=el', function(wttr){
-    console.log(wttr);
+  $.getJSON('https://wttr.in/analipsi?format=j1&lang=el', function(wttr){
     let temprature = wttr.current_condition[0].temp_C;
     let feelslike = wttr.current_condition[0].FeelsLikeC;
     let humidity = wttr.current_condition[0].humidity;
@@ -40,46 +38,44 @@ $(function() {
       wHour = 0;
       aurio = 1;
     } //poutania gia to vrady sygkekrimena gia th vroxh, oi wres pane 1-8 kai ta tables 0-7 opote pame sto auriano 0
-    //console.log(aurio);
-    //console.log(wra);
-    //console.log(wHour);
     let vroxh = wttr.weather[aurio].hourly[wHour].chanceofrain;
     let aurioTempMin = wttr.weather[1].mintempC;
     let aurioTempMax = wttr.weather[1].maxtempC;
     let aurioTempAvg = wttr.weather[1].avgtempC;
     let wreport = wttr.current_condition[0].lang_el[0].value;
-    let aurioRain = "";
+    let aurioRain = ''; //prepei na einai keno string
     let rainLoop = null;
-    for(let i = 0; i < 8; i++) {
+    for(let i = 2; i < 8; i++) {
       rainLoop = wttr.weather[1].hourly[i].chanceofrain;
       if(rainLoop > 50) {
-        aurioRain = " θα βρέξει";
-      } else if(rainLoop <= 50 && rainLoop >= 10 && aurioRain.length == 0) {
-        aurioRain = " μπορεί να βρέξει";
+        aurioRain = " βροχή!";
+        break;
+      } else if(rainLoop > 10) {
+        aurioRain = " βροχή;";
       }
     }
     document.getElementById("tempr").innerHTML = `${temprature}°C`;
     document.getElementById("rain").innerHTML = `${vroxh}% βροχή`;
     document.getElementById("humidity").innerHTML = `${humidity}% υγρασία`;
     document.getElementById("wreport").innerHTML = wreport;
-    document.getElementById("aurio").innerHTML = `αύριο ${aurioTempMin}-${aurioTempAvg}-${aurioTempMax}°C${aurioRain}`;
+    document.getElementById("aurio").innerHTML = `αύριο ${aurioTempMin}-${aurioTempMax}°C${aurioRain}`;
   });
 });
-const shortcuts = [
-  {
-    "key": "c",
-    "url": "cloud"
-  },
-  {
-    "key": "t",
-    "url": "transmissionLan"
-  },
-  {
-    "key": "j",
-    "url": "jackett"
-  }
-]
-const getUrl = (aElem) => document.getElementById(aElem).href;
+const shortcuts = [];
+const bindKey = (key, url) => ({ key, url });
+shortcuts.push(bindKey('c','cloud'));
+shortcuts.push(bindKey('1','transmissionLan'));
+shortcuts.push(bindKey('l','transmissionLocal'));
+shortcuts.push(bindKey('I','transmissionWeb'));
+shortcuts.push(bindKey('j','jackett'));
+shortcuts.push(bindKey('g','github'));
+shortcuts.push(bindKey('C','chess'));
+shortcuts.push(bindKey('w','wiki'));
+shortcuts.push(bindKey('a','apps'));
+shortcuts.push(bindKey('v','vue'));
+shortcuts.push(bindKey('s','syncthing'));
+console.log(shortcuts); //gia na ta vlepw na ta 8ymh8w pio eukola
+const getUrl = (el) => document.getElementById(el).href;
 const keybindLocation = (letter) => {
   for(let i = 0; i < shortcuts.length; i++) {
     if(letter === shortcuts[i].key) {
@@ -89,22 +85,18 @@ const keybindLocation = (letter) => {
 }
 const aClass = (linkArray) => {
   for(let i = 0; i < linkArray.length; i++) {
-    if(linkArray[i].id !== '') {
-      linkArray[i].className = 'keybound';
+    if(linkArray[i].id) {
+      linkArray[i].classList.add('keybound');
     }
   }
 }
-//const linkArray = document.querySelectorAll('#links a');
 </script>
 <style>
 body {
   --dark: rgb(86,86,86);
   --light: white;
-  background-color: var(--dark);
   font: bold 100% "DejaVu Mono", monospace;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-image: url(/startpage/bg.jpg);
+  color: var(--light);
 }
 hr {
   margin: 4mm 3cm;
@@ -117,7 +109,7 @@ hr {
   display: inline-block;
   color: black;
   font-size: 120%;
-  background-color: light;
+  background-color: var(--light);
   border: 2px solid;
   border-color: var(--light);
   border-radius: 4mm;
@@ -129,16 +121,21 @@ hr {
 }
 #links ul {
   border-radius: 2mm;
-  max-width: 20cm;
+  max-width: 25cm;
   padding: 0;
   margin: 3mm auto;
 }
-#links ul li {
+#links li {
   display: inline;
+  font-weight: bold;
 }
-#links ul li a {
+#links a {
+  color: var(--light);
   transition: color .3s linear;
-  background-color: var(--dark);
+  text-decoration: none;
+}
+#links a.keybound {
+  text-decoration: revert;
 }
 #links ul li a:hover {
   color: #FFE55A;
@@ -147,10 +144,6 @@ hr {
   text-transform: uppercase;
   font-size: 150%;
 }
-#links ul li, #links ul li a{
-  font-weight: bold;
-  color: var(--light);
-}
 #links ul li:nth-child(n+2):before{
   content: "[";
 }
@@ -158,28 +151,12 @@ hr {
   content: "]";
 }
 #greet {
-  color: var(--light);
   font-size: 4em;
   font-family: "GFS Didot", serif;
-  text-shadow: 2px 2px black;
+  text-shadow: 2px 2px var(--dark);
   display: inline-block;
   width: 100%;
   text-align: center;
-}
-#kairos {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  max-width: 12cm;
-  height: auto;
-  opacity: 30%;
-  transition: opacity .3s linear;
-}
-#kairos:hover {
- opacity: 100%;
-}
-#wreport {
-  text-transform: lowercase;
 }
 @media screen and (max-width: 14cm) {
   body {
@@ -211,25 +188,31 @@ hr {
   <ul>
     <li title="υπηρεσίες">🌍</li>
     <li>
-      <a id="cloud" href="http://localhost">cloud</a>
+      <a id="cloud" href="https://cloud.ionas.dev">cloud</a>
     </li>
     <li>
       <a id="jackett" href="http://localhost">jackett</a>
     </li>
     <li>
-      t: <a href="http://localhost">I</a>|<a href="http://localhost:9091/transmission/web/">l</a>|<a href="http://localhost">1</a>
+      t: <a id="transmissionWeb" href="http://localhost">I</a>|<a id="transmissionLocal" href="http://localhost:9091/transmission/web/">l</a>|<a id="transmissionLan" href="http://localhost">1</a>
     </li>
     <li>
-      <a href="https://github.com">git</a>
+      <a id="github" href="https://github.com">git</a>
     </li>
     <li>
       <a href="https://drive.google.com">gdrive</a>
     </li>
     <li>
-      <a href="http://localhost:11111/">sync</a>
+      <a id="syncthing" href="http://localhost:11111/">sync</a>
+    </li>
+    <li>
+      <a id="vue" href="http://localhost:8000/">vue</a>
     </li>
     <li>
       <a href="https://www.last.fm">last</a>
+    </li>
+    <li>
+      <a id="chess" href="https://lichess.org">chess</a>
     </li>
   </ul>
   <ul>
@@ -241,19 +224,25 @@ hr {
       <a href="https://developer.mozilla.org">mdn</a>
     </li>
     <li>
-      <a href="http://libgen.rs">libgen</a>
+      <a href="https://scholar.google.com/schhp?hl=en">gsch</a>
+    </li>
+    <li>
+      <a href="http://localhost">libgen</a>
     </li>
     <li>
       <a href="https://www.greek-language.gr/greekLang/index.html">greek</a>
+    </li>
+    <li>
+      <a id="wiki" href="https://en.wikipedia.org">wiki</a>
     </li>
     <li>
       <a href="https://wiki.archlinux.org">arch</a>
     </li>
   </ul>
   <ul>
-    <li title="σχολή...">😵</li>
+    <li title="σχολή κλπ">😵</li>
     <li>
-      <a href="https://apps.iee.ihu.gr/login">apps</a>
+      <a href="https://apps.iee.ihu.gr/announcements" id="apps">apps</a>
     </li>
     <li>
       <a href="https://moodle.teithe.gr">moodle</a>
@@ -263,6 +252,15 @@ hr {
     </li>
     <li>
       <a href="https://webmail.teithe.gr/login.php">mail</a>
+    </li>
+    <li>
+      <a href="https://ebanking.eurobank.gr/#/login">bankA</a>
+    </li>
+    <li>
+      <a href="https://www.winbank.gr/sites/idiwtes/el/Pages/default.aspx">bankB</a>
+    </li>
+    <li>
+      <a href="https://yava.services/training/trainers/yava-kato-touba?id_service=133&id_city=47">gym</a>
     </li>
   </ul>
   <ul id="coolstuff">
@@ -274,6 +272,11 @@ hr {
     <li id="aurio"></li>
   </ul>
 </div>
-<span id="weather"></span>
+<script>
+document.body.style.backgroundColor = color;
+document.getElementById("greet").innerHTML = xairetismos;
+const links = document.querySelectorAll('#links a');
+aClass(links);
+</script>
 </body>
 </html>
